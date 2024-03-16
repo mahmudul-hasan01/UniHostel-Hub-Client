@@ -1,8 +1,13 @@
+import Banner from "./Banner";
+import MealsByCategory from "./Meals/MealsByCategory";
+import MembershipSection from "./Member/MembershipSection";
 
 const Home = () => {
     return (
-        <div>
-          <h1>sakib</h1>  
+        <div className="space-y-10">
+          <Banner></Banner>
+          <MealsByCategory></MealsByCategory>
+          <MembershipSection></MembershipSection>
         </div>
     );
 };
