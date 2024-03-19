@@ -5,13 +5,11 @@ import useMeals from '../../../Hooks/useMeals';
 
 const MealsByCategory = () => {
 
-    const {mealsData} = useMeals()
-    
-    const dessert = mealsData.filter(item => item?.category === 'dessert')
-    // const pizza = mealsData.filter(item => item.category === 'pizza')
-    const soup = mealsData.filter(item => item.category === 'soup')
-    const salad = mealsData.filter(item => item.category === 'salad')
-    // const drinks = mealsData.filter(item => item.category === 'drinks')
+    const { mealsData } = useMeals()
+
+    const Breakfast = mealsData.filter(item => item?.category === 'breakfast')
+    const Lunch = mealsData.filter(item => item.category === 'Lunch')
+    const Dinner = mealsData.filter(item => item.category === 'Dinner')
 
 
     return (
@@ -24,13 +22,13 @@ const MealsByCategory = () => {
                 </TabList>
 
                 <TabPanel>
-                    <MealsItems items={soup}></MealsItems>
+                    <MealsItems items={Breakfast}></MealsItems>
                 </TabPanel>
                 <TabPanel>
-                    <MealsItems items={salad}></MealsItems>
+                    <MealsItems items={Lunch}></MealsItems>
                 </TabPanel>
                 <TabPanel>
-                    <MealsItems items={dessert}></MealsItems>
+                    <MealsItems items={Dinner}></MealsItems>
                 </TabPanel>
             </Tabs>
         </div>

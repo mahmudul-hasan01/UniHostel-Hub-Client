@@ -1,10 +1,12 @@
-// import { useEffect, useRef, useState } from 'react';
+import { CgProfile } from "react-icons/cg";
 import { navLink } from './NavLink';
 import img from '../../../public/img.jpg'
 import { Link } from 'react-router-dom';
+import useAuth from '../../Hooks/useAuth';
 
 const Navbar = () => {
 
+    const { user, logOut } = useAuth()
 
 
     return (
@@ -35,11 +37,15 @@ const Navbar = () => {
             <div className="navbar-end">
 
                 <div className="dropdown dropdown-end">
-                    <div tabIndex={0} role="button" className="btn m-1">Click</div>
+                    {
+                        user?.photoURL ?  <img tabIndex={0}  className="m-1 h-[50px] w-[50px] rounded-full" src={user?.photoURL} alt="" />  : <CgProfile tabIndex={0} className="m-1 h-[50px] w-[50px] " />
+                    }
+                    {/* <div tabIndex={0} role="button" className="btn m-1">Click</div> */}
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                        <li><a>User Name:</a></li>
-                        <li><a>Dashboard</a></li>
-                        <li><a>LogOut</a></li>
+                        <li><a>User Name: {user?.displayName}</a></li>
+                        <li><a>Email: {user?.email}</a></li>
+                        <li><Link to={`/dashboard/MyProfile`}>Dashboard</Link></li>
+                        <li><button onClick={logOut}>LogOut</button></li>
                     </ul>
                 </div>
 

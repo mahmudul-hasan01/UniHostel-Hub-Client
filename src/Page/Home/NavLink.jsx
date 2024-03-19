@@ -14,7 +14,7 @@ export const navLink = <>
         Home
     </NavLink>
     <NavLink
-        to="/menu"
+        to="/meals"
         className={({ isActive, isPending, isTransitioning }) =>
             [
                 isPending ? "pending" : "",
@@ -24,6 +24,18 @@ export const navLink = <>
         }
     >
         Meals
+    </NavLink>
+    <NavLink
+        to="/Upcoming-Meals:"
+        className={({ isActive, isPending, isTransitioning }) =>
+            [
+                isPending ? "pending" : "",
+                isActive ? "text-yellow-500 underline" : "",
+                isTransitioning ? "transitioning" : "",
+            ].join(" ")
+        }
+    >
+        Upcoming Meals
     </NavLink>
     <NavLink
         to="/Join-US"

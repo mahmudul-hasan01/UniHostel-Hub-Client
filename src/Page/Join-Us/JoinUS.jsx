@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import { FcGoogle } from "react-icons/fc";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 const JoinUS = () => {
 
     const [register, setRegister] = useState(false);
     const { login, googleSignIn } = useAuth()
+    const axiosPublic = useAxiosPublic()
 
     const hendleSubmit = async (e) => {
         e.preventDefault()
@@ -21,7 +23,23 @@ const JoinUS = () => {
             // })
     }
     const hendleGoogleLogin =async () => {
-        await googleSignIn()     
+        googleSignIn()
+        .then((res) => {
+           const userInfo = {
+               name: res?.user?.displayName,
+               email: res?.user?.email,
+               role: 'user',
+               status: 'Bronze Badge',
+           }
+           axiosPublic.post('/users', userInfo)
+               .then(res => {
+                   if (res.data.insertedId) {
+                       // toast.success('SignUp Successfully')
+                    //    reset()
+                    //    navigate('/')
+                   }
+               })
+        })   
     }
 
 

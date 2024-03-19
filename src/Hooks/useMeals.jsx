@@ -5,9 +5,9 @@ import useAxiosPublic from "./useAxiosPublic";
 const useMeals = () => {
     const axiosPublic = useAxiosPublic()
     const { data: mealsData = [], refetch, isLoading: loading } = useQuery({
-        queryKey: ['menu'],
+        queryKey: ['meals'],
         queryFn: async () => {
-            const res = await axiosPublic.get('/menu')
+            const res = await axiosPublic.get('/mealItem')
             return res.data
         }
     })
