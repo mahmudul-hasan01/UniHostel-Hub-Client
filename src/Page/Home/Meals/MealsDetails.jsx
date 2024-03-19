@@ -4,14 +4,23 @@ import { AiFillLike } from "react-icons/ai";
 import { MdReviews } from "react-icons/md";
 
 const MealsDetails = () => {
+
     const data = useLoaderData()
-    // const axiosPublic = useAxiosPublic()
-    const { image,  distributorName, ingredients, time, reviews, like, rating, description } = data
-    // const handleClick = () => {
-    //     const mealsInfo = {
-    //         status: 'pending',
-    //     }
-    // }
+
+    const axiosPublic = useAxiosPublic()
+
+    const { image, name, distributorName, ingredients, time, reviews, like, rating, description } = data
+
+    const handleClick =async () => {
+        const mealsInfo = {
+            name: name,
+            like: like,
+            reviews: reviews,
+            status: 'pending',
+        }
+        const data = await axiosPublic.post('/mealRequest', mealsInfo)
+        console.log(data.data);
+    }
 
     return (
         <div>
@@ -50,8 +59,8 @@ const MealsDetails = () => {
                     </div>
                     <div>
                         <div className="flex justify-evenly">
-                            <button className="text-sm font-bold text-[#0d87f8] overflow-hidden shadow-lg border border-[#0d87f8] before:block before:absolute before:translate-x-full before:inset-0 before:bg-[#0d87f8] before:hover:translate-x-0 before:duration-300 before:rounded-s-full before:-z-10 after:-z-10 after:rounded-e-full after:duration-300 after:hover:translate-x-0 after:block after:absolute after:-translate-x-full after:inset-0 after:bg-[#0d87f8] relative inline-block hover:text-white py-3 px-6 rounded-full">
-                                request button
+                            <button onClick={handleClick} className="text-sm font-bold text-[#0d87f8] overflow-hidden shadow-lg border border-[#0d87f8] before:block before:absolute before:translate-x-full before:inset-0 before:bg-[#0d87f8] before:hover:translate-x-0 before:duration-300 before:rounded-s-full before:-z-10 after:-z-10 after:rounded-e-full after:duration-300 after:hover:translate-x-0 after:block after:absolute after:-translate-x-full after:inset-0 after:bg-[#0d87f8] relative inline-block hover:text-white py-3 px-6 rounded-full">
+                                Meal request
                             </button>
                         </div>
                     </div>

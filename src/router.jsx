@@ -15,6 +15,7 @@ import ManageUsers from "./Dashboard/Admin/ManageUsers";
 import AllMealsItem from "./Dashboard/Admin/AllMealsItem";
 import ManageMeal from "./Dashboard/Admin/ManageMeal";
 import UpcomingMeal from "./Page/UpcomingMeals/UpcomingMeal";
+import RequestedMeals from "./Dashboard/User/RequestedMeals";
 
 export const router = createBrowserRouter([
     {
@@ -84,6 +85,10 @@ export const router = createBrowserRouter([
             {
                 path: 'MyProfile',
                 element: <UserProfile></UserProfile>
+            },
+            {
+                path: 'RequestedMeals',
+                element: <RequestedMeals></RequestedMeals>
             },
         ]
     }

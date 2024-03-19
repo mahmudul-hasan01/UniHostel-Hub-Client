@@ -69,24 +69,8 @@ const CheckoutForm = () => {
                 toast.success(paymentIntent?.id)
 
                     const status = data.name
-                    axiosSecure.patch(`/users/${data._id}`, {status})
+                    axiosSecure.patch(`/usersStatus/${user?.email}`, {status})
                         .then(data => console.log(data?.data))
-                   
-                // const payment = {
-                //     email: user?.email,
-                //     price: totalPrice,
-                //     transactionId: paymentIntent.id,
-                //     date: new Date(),
-                //     cartIds: cart.map(item => item._id),
-                //     menuItemIds: cart.map(item => item.menuId),
-                //     status: 'pending'
-                // }
-                // const res = await axiosSecure.post('/payment', payment)
-                // refetch()
-                // if (res?.data?.paymentResult.insertedId) {
-                //     toast.success('Payment Successfully')
-                //     navigate('/dashboard/paymentHistory')
-                // }
             }
         }
         
