@@ -2,13 +2,13 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import useAuth from "../../../Hooks/useAuth";
-// import toast from "react-hot-toast";
-// import useCart from "../Hooks/useCart";
-import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 
-const CheckoutForm = ({data}) => {
-   
+const CheckoutForm = () => {
+    
+        const data = useLoaderData()
 
     const [clientSecret, setcClientSecret] = useState('')
     const { user } = useAuth()
@@ -23,65 +23,73 @@ const CheckoutForm = ({data}) => {
 
     useEffect(() => {
         if (data.price > 0) {
-            axiosSecure.post(`/payment-intent`, { price: data.price})
+            axiosSecure.post(`/payment-intent`, { price: data?.price})
                 .then(res => {
                     setcClientSecret(res?.data?.clientSecret)
                 })
         }
-    }, [axiosSecure,data.price])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // if (!stripe || !elements) {
-        //     return
-        // }
-        // const card = elements.getElement(CardElement)
-        // if (card === null) {
-        //     return
-        // }
-        // const { error, paymentMethod } = await stripe.createPaymentMethod({
-        //     type: 'card',
-        //     card
-        // })
-        // if (error) {
-        //     toast.error(error.message)
+        if (!stripe || !elements) {
+            return
+        }
+        const card = elements.getElement(CardElement)
 
-        // } else {
-        //     // toast.success("Payment Done", paymentMethod?.id)
-        //     console.log(paymentMethod);
-        // }
-        // const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
-        //     payment_method: {
-        //         card: card,
-        //         billing_details: {
-        //             email: user?.email || 'anonymous',
-        //             name: user?.displayName || 'anonymous'
-        //         }
-        //     }
-        // })
-        // if (confirmError) {
-        //     console.log(confirmError);
-        // } else {
-        //     console.log(paymentIntent);
-        //     if (paymentIntent.status === 'succeeded') {
-        //         toast.success(paymentIntent?.id)
-        //         const payment = {
-        //             email: user?.email,
-        //             price: totalPrice,
-        //             transactionId: paymentIntent.id,
-        //             date: new Date(),
-        //             cartIds: cart.map(item => item._id),
-        //             menuItemIds: cart.map(item => item.menuId),
-        //             status: 'pending'
-        //         }
-        //         const res = await axiosSecure.post('/payment', payment)
-        //         refetch()
-        //         if (res?.data?.paymentResult.insertedId) {
-        //             toast.success('Payment Successfully')
-        //             navigate('/dashboard/paymentHistory')
-        //         }
-        //     }
-        // }
+        if (card === null) {
+            return
+        }
+        const { error, paymentMethod } = await stripe.createPaymentMethod({
+            type: 'card',
+            card
+        })
+        if (error) {
+            toast.error(error.message)
+
+        } else {
+            toast.success("Payment Done", paymentMethod?.id)
+            // console.log(paymentMethod.id);
+        }
+        const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: card,
+                billing_details: {
+                    email: user?.email || 'anonymous',
+                    name: user?.displayName || 'anonymous'
+                }
+            }
+        })
+        if (confirmError) {
+            console.log(confirmError);
+        } else {
+            console.log(paymentIntent);
+            if (paymentIntent.status === 'succeeded') {
+                toast.success(paymentIntent?.id)
+
+                    const status = data.name
+                    axiosSecure.patch(`/users/${data._id}`, {status})
+                        .then(data => console.log(data?.data))
+                   
+                // const payment = {
+                //     email: user?.email,
+                //     price: totalPrice,
+                //     transactionId: paymentIntent.id,
+                //     date: new Date(),
+                //     cartIds: cart.map(item => item._id),
+                //     menuItemIds: cart.map(item => item.menuId),
+                //     status: 'pending'
+                // }
+                // const res = await axiosSecure.post('/payment', payment)
+                // refetch()
+                // if (res?.data?.paymentResult.insertedId) {
+                //     toast.success('Payment Successfully')
+                //     navigate('/dashboard/paymentHistory')
+                // }
+            }
+        }
+        
     }
 
 
@@ -103,8 +111,8 @@ const CheckoutForm = ({data}) => {
                     },
                 }}
             /> 
-            {/* || !clientSecret */}
-            <button className="btn btn-neutral btn-md mt-8" type="submit" disabled={!stripe }>
+           
+            <button className="btn btn-neutral btn-md mt-8" type="submit" disabled={!stripe || !clientSecret}>
                 Pay
             </button>
         </form>

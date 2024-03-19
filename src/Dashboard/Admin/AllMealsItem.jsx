@@ -23,11 +23,7 @@ const AllMealsItem = () => {
                     <div className="card-body">
                         <h2 className="card-title">{item.name}</h2>
                         <p>{item.recipe}</p>
-                        {/* <div className="card-actions">
-                            <Link to={`/mealsDetails/${_id}`}>
-                                <button className="btn border-sky-300 text-sky-500">Meals Details</button>
-                            </Link>
-                        </div> */}
+                        
                     </div>
                 </div>)
                 }
