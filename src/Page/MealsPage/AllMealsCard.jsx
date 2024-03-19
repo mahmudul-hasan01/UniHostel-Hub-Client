@@ -10,11 +10,6 @@ const AllMealsCard = ({item}) => {
                 <h2 className="card-title">{name}</h2>
                 <h2 className="card-title">{category}</h2>
                 <p>{recipe}</p>
-                <div className="card-actions">
-                    {/* <Link to={`/mealsDetails/${_id}`}>
-                        <button className="btn border-sky-300 text-sky-500">Meals Details</button>
-                    </Link> */}
-                </div>
             </div>
         </div>
     );

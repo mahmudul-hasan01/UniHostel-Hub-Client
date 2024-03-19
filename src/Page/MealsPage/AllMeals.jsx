@@ -26,13 +26,6 @@ const AllMeals = () => {
 
     return (
         <div>
-            {
-                isLoading && 
-                <div className='flex justify-center items-center'>
-                     <div className="w-10 h-10 my-10  animate-[spin_1s_linear_infinite] rounded-full border-4 border-r-transparent border-l-transparent border-sky-400"></div> 
-                </div>
-               
-            }
             <form onSubmit={handleSubmit} className="grid grid-cols-4 max-w-xl mx-auto my-8">
                 <label className="input col-span-3 border-2 rounded-r-none border-sky-400 h-[60px] input-bordered flex items-center gap-2 ">
                     <input type="text" name="search" className="grow " placeholder="Search" />
@@ -55,6 +48,13 @@ const AllMeals = () => {
                 }
               
             </div>
+            {
+                isLoading && 
+                <div className='flex justify-center items-center'>
+                     <div className="w-10 h-10 my-10  animate-[spin_1s_linear_infinite] rounded-full border-4 border-r-transparent border-l-transparent border-sky-400"></div> 
+                </div>
+               
+            }
         </div>
     );
 };

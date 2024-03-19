@@ -3,16 +3,21 @@ import { FaUtensils } from "react-icons/fa6";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import useAuth from "../../Hooks/useAuth";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 const AddMeal = () => {
 
     const image_hosting_api = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`
     const axiosPublic = useAxiosPublic()
     const axiosSecure = useAxiosSecure()
-    const {user} = useAuth()
-    const { register, handleSubmit, reset, formState: { errors }, } = useForm()
+    const { user } = useAuth()
+    const { register, handleSubmit } = useForm()
+    const [meals, setMeals] = useState([])
+
 
     const onSubmit = async (data) => {
+
         const imageFile = { image: data.image[0] }
 
         const res = await axiosPublic.post(image_hosting_api, imageFile, {
@@ -20,12 +25,12 @@ const AddMeal = () => {
                 'content-type': 'multipart/form-data'
             }
         })
-        // console.log(imageFile);
-        if(res.data.success){
+
+        if (res.data.success) {
             const mealsItem = {
                 name: data?.name,
-                distributorName : user.displayName ? user.displayName : 'Null',
-                distributorEmail : user.email,
+                distributorName: user.displayName ? user.displayName : 'Null',
+                distributorEmail: user.email,
                 category: data?.category,
                 ingredients: data?.ingredients,
                 rating: data?.rating,
@@ -36,12 +41,21 @@ const AddMeal = () => {
                 description: data?.description,
                 image: res?.data?.data?.display_url
             }
-            const meals = await axiosSecure.post('/mealItem', mealsItem)
-            console.log(meals.data);
-            if(meals.data.insertedId){
-                reset()
-                // toast.success(`${data.neme} add successfully`)
-            }
+            setMeals(mealsItem)
+        }
+    }
+    const handleAddMeal = async () => {
+
+        if (meals.image) {
+            const meal = await axiosSecure.post('/mealItem', meals)
+            console.log(meal.data);
+        }
+    }
+    const handleAddUpcoming = async () => {
+
+        if (meals.image) {
+            const meal = await axiosSecure.post('/upcoming', meals)
+            console.log(meal.data);
         }
     }
 
@@ -49,7 +63,7 @@ const AddMeal = () => {
         <div>
             {/* <SectionTitle subHeading={'What"s New'} heading={'Add an item'}></SectionTitle> */}
             <div>
-                
+
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
 
                     <label className="form-control w-full">
@@ -124,7 +138,7 @@ const AddMeal = () => {
                             <div className="label">
                                 <span className="label-text">Like*</span>
                             </div>
-                            <input {...register("like")} defaultValue={0} type="text"  className="input input-bordered w-full" />
+                            <input {...register("like")} defaultValue={0} type="text" className="input input-bordered w-full" />
 
                         </label>
 
@@ -132,7 +146,7 @@ const AddMeal = () => {
                             <div className="label">
                                 <span className="label-text">Reviews*</span>
                             </div>
-                            <input {...register("reviews")} defaultValue={0} type="text"  className="input input-bordered w-full" />
+                            <input {...register("reviews")} defaultValue={0} type="text" className="input input-bordered w-full" />
 
                         </label>
 
@@ -147,11 +161,18 @@ const AddMeal = () => {
                     </label>
 
                     <input {...register("image")} type="file" className="file-input bg-sky-400 block w-full max-w-xs" />
-
                     <button className="btn btn-outline border border-sky-400 bg-sky-400">
-                        Add Item <FaUtensils></FaUtensils>
+                        Submit Form
                     </button>
                 </form>
+                <div className="flex justify-center gap-10 mt-8">
+                    <button onClick={handleAddMeal} className="text-sm font-bold text-[#0d87f8] overflow-hidden shadow-lg border border-[#0d87f8] before:block before:absolute before:translate-x-full before:inset-0 before:bg-[#0d87f8] before:hover:translate-x-0 before:duration-300 before:rounded-s-full before:-z-10 after:-z-10 after:rounded-e-full after:duration-300 after:hover:translate-x-0 after:block after:absolute after:-translate-x-full after:inset-0 after:bg-[#0d87f8] relative inline-block hover:text-white py-3 px-6 rounded-full">
+                        Add Meal
+                    </button>
+                    <button onClick={handleAddUpcoming} className="text-sm font-bold text-[#0d87f8] overflow-hidden shadow-lg border border-[#0d87f8] before:block before:absolute before:translate-x-full before:inset-0 before:bg-[#0d87f8] before:hover:translate-x-0 before:duration-300 before:rounded-s-full before:-z-10 after:-z-10 after:rounded-e-full after:duration-300 after:hover:translate-x-0 after:block after:absolute after:-translate-x-full after:inset-0 after:bg-[#0d87f8] relative inline-block hover:text-white py-3 px-6 rounded-full">
+                        Add Upcoming
+                    </button>
+                </div>
             </div>
         </div>
     );

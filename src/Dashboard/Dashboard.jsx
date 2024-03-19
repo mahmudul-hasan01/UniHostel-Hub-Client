@@ -1,15 +1,29 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { FaBookBookmark, FaCartShopping, FaEnvelope, FaUsers, FaUtensils } from "react-icons/fa6";
 import { FaAddressCard, FaCalendar, FaHome, FaList, FaSearch } from "react-icons/fa";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
+import useAuth from "../Hooks/useAuth";
 
 const Dashboard = () => {
-    const isAdmin = true
+
+    const axiosPublic = useAxiosPublic()
+    const {user} = useAuth()
+
+    const { data: userData = []} = useQuery({
+        queryKey: ['userEmail'],
+        queryFn: async () => {
+            const res = await axiosPublic.get(`/user/${user?.email}`)
+            return res
+        }
+    })
+    
     return (
         <div className="flex">
         <div className="w-64 min-h-screen bg-sky-300">
             <ul className="menu space-y-5 mt-6">
                 {
-                    isAdmin ?
+                    userData?.data?.role === 'admin' ?
                         <>
                             <li><NavLink to='/dashboard/AdminProfile'><FaHome /> Admin Profile</NavLink></li>
                             <li><NavLink to='/dashboard/ManageUsers'><FaUsers /> Manage Users</NavLink></li>

@@ -13,6 +13,8 @@ import AdminProfile from "./Dashboard/Admin/AdminProfile";
 import UserProfile from "./Dashboard/User/UserProfile";
 import ManageUsers from "./Dashboard/Admin/ManageUsers";
 import AllMealsItem from "./Dashboard/Admin/AllMealsItem";
+import ManageMeal from "./Dashboard/Admin/ManageMeal";
+import UpcomingMeal from "./Page/UpcomingMeals/UpcomingMeal";
 
 export const router = createBrowserRouter([
     {
@@ -36,6 +38,10 @@ export const router = createBrowserRouter([
                 element: <AllMeals></AllMeals>
             },
             {
+                path: '/Upcoming-Meals',
+                element: <UpcomingMeal></UpcomingMeal>
+            },
+            {
                 path: '/mealsDetails/:id',
                 element: <MealsDetails></MealsDetails>,
                 loader: ({ params }) => fetch(`http://localhost:5000/mealItem/${params.id}`)
@@ -50,7 +56,6 @@ export const router = createBrowserRouter([
     {
         path: 'dashboard',
         element: <Dashboard></Dashboard>,
-
         children: [
             // admin
             {
@@ -69,6 +74,12 @@ export const router = createBrowserRouter([
                 path: 'Allmeals',
                 element: <AllMealsItem></AllMealsItem>
             },
+            {
+                path: 'ManageMeal/:id',
+                element: <ManageMeal></ManageMeal>,
+                loader: ({ params }) => fetch(`http://localhost:5000/mealItem/${params.id}`)
+            },
+            
             // user
             {
                 path: 'MyProfile',
