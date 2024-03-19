@@ -16,6 +16,7 @@ const MealsDetails = () => {
             name: name,
             like: like,
             reviews: reviews,
+            image: image,
             status: 'pending',
         }
         const data = await axiosPublic.post('/mealRequest', mealsInfo)
