@@ -1,19 +1,17 @@
 import { useState } from "react";
-import useMeals from "../../Hooks/useMeals";
 import AllMealsCard from "./AllMealsCard";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const AllMeals = () => {
 
-    const { mealsData } = useMeals()
-    const [search, setSearch] = useState([])
+    const [search, setSearch] = useState('')
     const axiosSecure = useAxiosSecure()
 
     const handleSubmit =(e) => {
         e.preventDefault()
-        const search = e.target.search.value
-        setSearch(search);
+        const searchs = e.target.search.value
+        setSearch(searchs);
     }
 
     const {data : allMeals = [], isLoading} = useQuery({
@@ -37,11 +35,7 @@ const AllMeals = () => {
             </form>
 
             <div className="grid grid-cols-3 gap-8">
-                {/* {
-                    allMeals === length == 0 
-                    &&
-                    mealsData.map(item => <AllMealsCard key={item._id} item={item}></AllMealsCard>)
-                } */}
+                
                 {
                    
                     allMeals.map(item => <AllMealsCard key={item._id} item={item}></AllMealsCard>)  

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import { FcGoogle } from "react-icons/fc";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
@@ -9,6 +9,7 @@ const JoinUS = () => {
     const [register, setRegister] = useState(false);
     const { login, googleSignIn } = useAuth()
     const axiosPublic = useAxiosPublic()
+    const navigate = useNavigate()
 
     const hendleSubmit = async (e) => {
         e.preventDefault()
@@ -17,29 +18,24 @@ const JoinUS = () => {
         const password = form.password.value
         console.log(email, password);
         await login(email, password)
-            // .then((data) => {
-            //     console.log(data)
-            //     //  navigate(from,{replace:true})
-            // })
+        navigate('/')
     }
-    const hendleGoogleLogin =async () => {
+    const hendleGoogleLogin = async () => {
         googleSignIn()
-        .then((res) => {
-           const userInfo = {
-               name: res?.user?.displayName,
-               email: res?.user?.email,
-               role: 'user',
-               status: 'Bronze Badge',
-           }
-           axiosPublic.post('/users', userInfo)
-               .then(res => {
-                   if (res.data.insertedId) {
-                       // toast.success('SignUp Successfully')
-                    //    reset()
-                    //    navigate('/')
-                   }
-               })
-        })   
+            .then((res) => {
+                const userInfo = {
+                    name: res?.user?.displayName,
+                    email: res?.user?.email,
+                    role: 'user',
+                    status: 'Bronze Badge',
+                }
+                axiosPublic.post('/users', userInfo)
+                    .then(res => {
+                        if (res.data.insertedId) {
+                            navigate('/')
+                        }
+                    })
+            })
     }
 
 
@@ -77,7 +73,7 @@ const JoinUS = () => {
                         <input id="_password" type="password" name="password" placeholder=".............." min={5} className="p-3 block w-full outline-none border rounded-md invalid:border-red-700 valid:border-black" />
                     </div>
                     {/* button type will be submit for handling form submission*/}
-                    <button className="py-2 px-5 mb-4 mx-auto mt-8 shadow-lg border rounded-md border-black block">Submit</button>
+                    <button className="py-2 px-5 mb-4 mx-auto mt-8 shadow-lg border rounded-md border-black block">Join Us</button>
                 </form>
                 <p className="mb-3 text-center">Don&apos;t have an account?<Link to={'/register'} onClick={() => { setRegister(!register); }} className="underline font-semibold">Register</Link></p>
                 <hr />

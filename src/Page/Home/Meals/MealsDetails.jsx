@@ -1,17 +1,21 @@
-import { Link, useLoaderData } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import useAxiosPublic from "../../../Hooks/useAxiosPublic";
 import { AiFillLike } from "react-icons/ai";
-import { MdReviews } from "react-icons/md";
+import { useState } from "react";
+import useAuth from "../../../Hooks/useAuth";
+import useMeals from "../../../Hooks/useMeals";
+// import { MdReviews } from "react-icons/md";
 
 const MealsDetails = () => {
 
     const data = useLoaderData()
-
+    const { user } = useAuth()
     const axiosPublic = useAxiosPublic()
+    const { refetch } = useMeals()
 
-    const { image, name, distributorName, ingredients, time, reviews, like, rating, description } = data
+    const { image, name, distributorName, ingredients, time, reviews, like, rating, description, _id } = data
 
-    const handleClick =async () => {
+    const handleClick = async () => {
         const mealsInfo = {
             name: name,
             like: like,
@@ -19,18 +23,46 @@ const MealsDetails = () => {
             image: image,
             status: 'pending',
         }
-        const data = await axiosPublic.post('/mealRequest', mealsInfo)
-        console.log(data.data);
+        await axiosPublic.post('/mealRequest', mealsInfo)
     }
+
+    const [likes, setLikes] = useState(parseFloat(like))
+    const [isLike, setIsLike] = useState(false)
+
+    const handleLike = async () => {
+
+        setLikes(likes + (isLike ? -1 : 1))
+        setIsLike(like < 0 ? false : !isLike )
+
+        await axiosPublic.patch(`/likeUpdate/${_id}`, { like: likes + 1 })
+        refetch()
+    }
+
+
 
     return (
         <div>
+            <p>{like}</p>
             <div className=" flex justify-center  flex-col md:flex-row my-20">
                 <div className="relative max-w-[350px] group">
                     <img className="rounded-lg h-[300px] transform scale-105" src={image} alt="card navigate ui" />
-                    <span className="absolute -bottom-6 left-1/2 z-30 flex h-[40px] w-[40px] -translate-x-1/2 transform items-center  justify-center rounded-full bg-white bg-gradient-to-tr from-[#0d87f8]  to-[#70c4ff] duration-500 group-hover:rotate-180 group-hover:shadow-[0px_0px_30px_2px_#0d87f8]">
-                        <svg width={25} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <g strokeWidth="0"></g> <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g> <g id="SVGRepo_iconCarrier"> <g id="style=linear"> <g id="add"> <path id="vector" d="M11.998 5.84424L11.998 18.1604" stroke="#9EE6FD" strokeWidth="2" strokeLinecap="round"></path> <path id="vector_2" d="M18.1561 12.002L5.83998 12.0019" stroke="#9EE6FD" strokeWidth="2" strokeLinecap="round"></path> </g> </g> </g> </svg>
-                    </span>
+                    {
+                        user?.email ?
+                            <span onClick={handleLike} className="absolute -bottom-6 left-1/2 z-30 flex h-[40px] w-[40px] -translate-x-1/2 transform items-center  justify-center rounded-full bg-white bg-gradient-to-tr from-[#0d87f8]  to-[#70c4ff] duration-500 group-hover:rotate-180 group-hover:shadow-[0px_0px_30px_2px_#0d87f8]">
+                                <AiFillLike className="text-white text-lg"></AiFillLike>
+                            </span>
+                            :
+                            <div className="">
+                                <span className="absolute -bottom-6 left-1/2 z-30 flex h-[40px] w-[40px] -translate-x-1/2 transform items-center  justify-center rounded-full bg-white bg-gradient-to-tr from-[#0d87f8]  to-[#70c4ff] duration-500 group-hover:rotate-180 group-hover:shadow-[0px_0px_30px_2px_#0d87f8]">
+                                    <AiFillLike className="text-white text-lg"></AiFillLike>
+
+                                </span>
+                                <div className="absolute left-[100px] -bottom-20 cursor-pointer whitespace-nowrap opacity-0 duration-500 hover:hidden group-hover:-bottom-20 group-hover:opacity-100  ">
+                                    <p className="rounded-md bg-[#0EA5E9] px-3 py-2 text-white shadow-[0px_0px_10px_0px_#0EA5E9]"> Please Login First</p>
+                                    <span className="absolute -top-2 left-[50%] h-0 w-0 -translate-x-1/2 -rotate-[45deg] border-b-[20px] border-r-[20px] border-b-transparent border-r-[#0EA5E9] shadow-[0px_0px_10px_0px_#0EA5E9]"></span>
+                                </div>
+                            </div>
+                    }
                     <span className="bg-gradient-to-tr from-[#0d87f8]/80 to-[#70c4ff]/80 duration-300  absolute -bottom-6 left-1/2 transform -translate-x-1/2 rounded-full  z-20 w-0 h-0  group-hover:w-[50px] group-hover:h-[50px]"></span>
                     <span className="bg-gradient-to-tr from-[#0d87f8]/50 to-[#70c4ff]/50 duration-500  absolute -bottom-6 left-1/2 transform -translate-x-1/2 rounded-full  z-20 w-0 h-0  group-hover:w-[60px] group-hover:h-[60px] hover:duration-300 "></span>
                 </div>
@@ -51,7 +83,7 @@ const MealsDetails = () => {
                         </div>
                         <div className="space-y-1">
                             <p className="text-gray-500 text-sm font-sans">Like</p>
-                            <p className="text-3xl tracking-wider text-gray-700">{like}</p>
+                            <p className="text-3xl tracking-wider text-gray-700">{likes}</p>
                         </div>
                         <div className="space-y-1">
                             <p className="text-gray-500 text-sm font-sans">Reviews</p>

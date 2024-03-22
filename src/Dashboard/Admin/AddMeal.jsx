@@ -94,7 +94,7 @@ const AddMeal = () => {
                             </div>
                             <select {...register("category")} defaultValue={'default'} className="select select-bordered w-full ">
                                 <option disabled value={'default'}>Select a category</option>
-                                <option value="breakfast">breakfast</option>
+                                <option value="Breakfast">Breakfast</option>
                                 <option value="Lunch">Lunch</option>
                                 <option value="Dinner">Dinner</option>
 

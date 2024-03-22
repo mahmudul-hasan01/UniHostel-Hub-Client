@@ -1,15 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
-import UpcomingCard from "./UpcomingCard";
+import UpcomingCard from "../../Page/UpcomingMeals/UpcomingCard";
 
-const UpcomingMeal = () => {
+const UpcomeingMealsD = () => {
 
     const axiosPublic = useAxiosPublic()
 
     const { data: upcoming = [] } = useQuery({
         queryKey: ['upcoming'],
         queryFn: async () => {
-            const res = await axiosPublic.get('/upcoming')
+            const res = await axiosPublic.get(`/upcomings`)
             return res.data
         }
     })
@@ -24,4 +24,4 @@ const UpcomingMeal = () => {
     );
 };
 
-export default UpcomingMeal;
+export default UpcomeingMealsD;
